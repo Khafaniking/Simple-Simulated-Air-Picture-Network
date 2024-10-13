@@ -3,6 +3,7 @@
 #five radar nodes in Radar Stations.py
 
 import zmq
+import time
 
 context = zmq.Context()
 #connecting to each of the radar stations
@@ -17,3 +18,14 @@ traffic_to_radar_2_pub.bind(f"tcp://localhost:5568")
 traffic_to_radar_3_pub.bind(f"tcp://localhost:5569")
 traffic_to_radar_4_pub.bind(f"tcp://localhost:5570")
 traffic_to_radar_5_pub.bind(f"tcp://localhost:5571")
+
+#testing connection from traffic to radar stations
+while True:
+    message = "Hiii :)"
+    print(f"Sending: {message}")
+    traffic_to_radar_1_pub.send_string(message)
+    traffic_to_radar_2_pub.send_string(message)
+    traffic_to_radar_3_pub.send_string(message)
+    traffic_to_radar_4_pub.send_string(message)
+    traffic_to_radar_5_pub.send_string(message)
+    time.sleep(1)
