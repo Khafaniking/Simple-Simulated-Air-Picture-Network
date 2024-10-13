@@ -1,4 +1,5 @@
 import zmq
+import time
 
 context = zmq.Context()
 
@@ -35,3 +36,20 @@ socket_fp_to_radar_2_pub.bind("tcp://localhost:5563")
 socket_fp_to_radar_3_pub.bind("tcp://localhost:5564")
 socket_fp_to_radar_4_pub.bind("tcp://localhost:5565")
 socket_fp_to_radar_5_pub.bind("tcp://localhost:5566")
+
+#testing connection from focal point to radar stations
+#while True:
+    #message = "Hiii :)"
+    #print(f"Sending: {message}")
+    #socket_fp_to_radar_1_pub.send_string(message)
+    #socket_fp_to_radar_2_pub.send_string(message)
+    #socket_fp_to_radar_3_pub.send_string(message)
+    #socket_fp_to_radar_4_pub.send_string(message)
+    #socket_fp_to_radar_5_pub.send_string(message)
+    #time.sleep(1)
+
+#testing connection from radar stations to focal point
+while True:
+    for idx, socket in enumerate(sockets):
+        message = socket.recv_string()
+        print(f"Received from Radar Station {idx+1}: {message}")
