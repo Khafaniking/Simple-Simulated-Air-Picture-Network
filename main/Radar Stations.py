@@ -26,6 +26,17 @@ socket_radar_3_to_fp_pub.bind(f"tcp://localhost:5559")
 socket_radar_4_to_fp_pub.bind(f"tcp://localhost:5560")
 socket_radar_5_to_fp_pub.bind(f"tcp://localhost:5561")
 
+#organize the pub sockets for sending messages to the
+#focal point in an organized fashion
+pub_sockets = [
+    socket_radar_1_to_fp_pub,
+    socket_radar_2_to_fp_pub,
+    socket_radar_3_to_fp_pub,
+    socket_radar_4_to_fp_pub,
+    socket_radar_5_to_fp_pub
+]
+
+
 sockets = []
 socket_stations = {}
 
@@ -76,7 +87,7 @@ for i, port in enumerate(range(5567, 5572)):  # Ports for Radar Stations 1 to 5
     #print("Message sent from Radar Station 5")
     #time.sleep(1)
 
-#test connection from traffic to radar stations
+#connection from traffic to radar stations
 
 poller = zmq.Poller()
 for socket in traffic_sockets:
@@ -84,9 +95,14 @@ for socket in traffic_sockets:
 
 while True:
     events = dict(poller.poll())
-    for socket in traffic_sockets:
+    for i, socket in enumerate(traffic_sockets):
         if socket in events:
             message = socket.recv_string()
             radar_station = traffic_socket_stations[socket]
             print(f"Received on {radar_station}: {message}")
+
+            #forward our messages from the radar stations
+            #to the focal point
+            pub_sockets[i].send_string(message)
+            print(f"{radar_station} forwarded: {message}")
 
