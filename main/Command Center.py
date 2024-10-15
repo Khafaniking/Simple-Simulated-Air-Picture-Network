@@ -6,11 +6,11 @@ context = zmq.Context()
 #CONNECTIONS WITH THE FOCAL POINT
 
 iata_ports = {
-    "AA": 5551,  # Radar Station AA
-    "BB": 5552,  # Radar Station BB
-    "CC": 5553,  # Radar Station CC
-    "DD": 5554,  # Radar Station DD
-    "EE": 5555   # Radar Station EE
+    "AA": 5551,  # Radar Station 1
+    "BB": 5552,  # Radar Station 2
+    "CC": 5553,  # Radar Station 3
+    "DD": 5554,  # Radar Station 4
+    "EE": 5555   # Radar Station 5
 }
 
 #sockets for publishing to the focal point, iata/radar station specific
