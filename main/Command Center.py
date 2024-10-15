@@ -45,7 +45,7 @@ def filter_and_forward_traffic():
 
             for target_code in traffic_designator.keys():
                 if target_code != iata_code:
-                    socket_cc_to_fp_pub[target_code].send_string(f"{target_code} {message}")
+                    socket_cc_to_fp_pub[target_code].send_string(f"{message}")
                     print(f"Sent to Focal Point for {target_code} (from {iata_code}): {message}")
 
 while True:
@@ -59,7 +59,7 @@ while True:
         if "IATA:" in part:
             iata_code = part.split(": ")[1]  #grab the IATA code (AA, BB, etc)
             break
-    #chceks to make sure our iata code is in
+    #checks to make sure our iata code is in
     #traffic designator, then marks that message
     #for the filter and forward function to look at
     if iata_code and iata_code in traffic_designator:
