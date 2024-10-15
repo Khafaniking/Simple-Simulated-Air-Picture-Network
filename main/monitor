@@ -1,5 +1,6 @@
 import zmq
 
+#monitors radar station 1, AA
 context = zmq.Context()
 
 #log listens to traffic from... traffic.py communicating to radar station 1
@@ -26,4 +27,4 @@ while True:
 
     if socket_focal_point in events:
         message = socket_focal_point.recv_string()
-        print(f"Additional Flight Data logged: {message}")
+        print(f"Additional flight data from Command Center: {message}")
