@@ -37,18 +37,7 @@ socket_fp_to_radar_3_pub.bind("tcp://localhost:5564")
 socket_fp_to_radar_4_pub.bind("tcp://localhost:5565")
 socket_fp_to_radar_5_pub.bind("tcp://localhost:5566")
 
-#testing connection from focal point to radar stations
-#while True:
-    #message = "Hiii :)"
-    #print(f"Sending: {message}")
-    #socket_fp_to_radar_1_pub.send_string(message)
-    #socket_fp_to_radar_2_pub.send_string(message)
-    #socket_fp_to_radar_3_pub.send_string(message)
-    #socket_fp_to_radar_4_pub.send_string(message)
-    #socket_fp_to_radar_5_pub.send_string(message)
-    #time.sleep(1)
-
-#testing connection from radar stations to focal point
+#connection from radar stations to focal point
 
 poller = zmq.Poller()
 for socket in sockets:
@@ -60,3 +49,7 @@ while True:
         if socket in events:
             message = socket.recv_string()
             print(f"Received from Radar Station {i+1}: {message}")
+
+            #forward the messages to the command center
+            socket_fp_to_cc_pub.send_string(message)
+            print(f"Forwarded to Command Center: {message}")
