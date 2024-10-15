@@ -49,7 +49,14 @@ socket_fp_to_radar_5_pub.bind("tcp://localhost:5566")
     #time.sleep(1)
 
 #testing connection from radar stations to focal point
+
+poller = zmq.Poller()
+for socket in sockets:
+    poller.register(socket, zmq.POLLIN)
+
 while True:
-    for idx, socket in enumerate(sockets):
-        message = socket.recv_string()
-        print(f"Received from Radar Station {idx+1}: {message}")
+    events = dict(poller.poll(10))
+    for i, socket in enumerate(sockets):
+        if socket in events:
+            message = socket.recv_string()
+            print(f"Received from Radar Station {i+1}: {message}")
