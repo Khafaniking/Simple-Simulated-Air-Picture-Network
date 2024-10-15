@@ -20,6 +20,8 @@ traffic_to_radar_3_pub.bind(f"tcp://localhost:5569")
 traffic_to_radar_4_pub.bind(f"tcp://localhost:5570")
 traffic_to_radar_5_pub.bind(f"tcp://localhost:5571")
 
+time.sleep(3) #attempting to circumvent the slow joiner problem
+
 #radars get traffic that's banded by airline and by
 #altitude
 stations_config = {
@@ -36,7 +38,9 @@ def generate_tail_number():
 def generate_traffic():
     tail_number = generate_tail_number()
     iata_designator =  random.choice(["AA", "BB", "CC", "DD", "EE"])
-    altitude = random.randint(0, 50000)
+    altitude_range = next(config["altitude_range"] for config in stations_config.values()
+                          if config["iata_designator"] == iata_designator)
+    altitude = random.randint(altitude_range[0], altitude_range[1])
     return tail_number, iata_designator, altitude
 
 #creating and sending the traffic
