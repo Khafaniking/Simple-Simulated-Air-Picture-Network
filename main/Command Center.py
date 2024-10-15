@@ -1,4 +1,5 @@
 import zmq
+import time
 
 context = zmq.Context()
 
@@ -12,3 +13,7 @@ socket_cc_to_fp_pub.bind("tcp://localhost:5555")
 socket_fp_to_cc_sub = context.socket(zmq.SUB)
 socket_fp_to_cc_sub.connect("tcp://localhost:5556")
 socket_fp_to_cc_sub.setsockopt_string(zmq.SUBSCRIBE, "")
+
+while True:
+    message = socket_fp_to_cc_sub.recv_string()
+    print(f"Command Center received: {message}")
