@@ -26,6 +26,7 @@ socket_radar_3_to_fp_pub.bind(f"tcp://localhost:5559")
 socket_radar_4_to_fp_pub.bind(f"tcp://localhost:5560")
 socket_radar_5_to_fp_pub.bind(f"tcp://localhost:5561")
 
+
 #organize the pub sockets for sending messages to the
 #focal point in an organized fashion
 pub_sockets = [
@@ -36,7 +37,7 @@ pub_sockets = [
     socket_radar_5_to_fp_pub
 ]
 
-
+#connections from focal point.py to radar stations
 sockets = []
 socket_stations = {}
 
@@ -47,7 +48,7 @@ for i, port in enumerate(range(5562, 5567)):  # Ports for Radar Stations 1 to 5
     sockets.append(socket)
     socket_stations[socket] = radar_stations[i]
 
-#CONNECTIONS TO TRAFFIC.PY
+#CONNECTIONS from TRAFFIC.PY to radar stations
 
 traffic_sockets = []
 traffic_socket_stations = {}
@@ -58,35 +59,6 @@ for i, port in enumerate(range(5567, 5572)):  # Ports for Radar Stations 1 to 5
     traffic_sockets.append(socket)
     traffic_socket_stations[socket] = radar_stations[i]
 
-#test connection from fp to radar stations
-
-#poller = zmq.Poller()
-#for socket in sockets:
-    #poller.register(socket, zmq.POLLIN)
-
-#while True:
-    #events = dict(poller.poll())
-    #for socket in sockets:
-        #if socket in events:
-            #message = socket.recv_string()
-            #radar_station = socket_stations[socket]
-            #print(f"Received on {radar_station}: {message}")
-
-#testing connection from radar stations to focal point
-#while True:
-    # Send a test message every second
-    #socket_radar_1_to_fp_pub.send_string("Test message from Radar Station 1")
-    #print("Message sent from Radar Station 1")
-    #socket_radar_2_to_fp_pub.send_string("Test message from Radar Station 2")
-    #print("Message sent from Radar Station 2")
-    #socket_radar_3_to_fp_pub.send_string("Test message from Radar Station 3")
-    #print("Message sent from Radar Station 3")
-    #socket_radar_4_to_fp_pub.send_string("Test message from Radar Station 4")
-    #print("Message sent from Radar Station 4")
-    #socket_radar_5_to_fp_pub.send_string("Test message from Radar Station 5")
-    #print("Message sent from Radar Station 5")
-    #time.sleep(1)
-
 #connection from traffic to radar stations
 
 poller = zmq.Poller()
@@ -94,7 +66,7 @@ for socket in traffic_sockets:
     poller.register(socket, zmq.POLLIN)
 
 while True:
-    events = dict(poller.poll())
+    events = dict(poller.poll(10))
     for i, socket in enumerate(traffic_sockets):
         if socket in events:
             message = socket.recv_string()
