@@ -57,15 +57,14 @@ while True:
         if socket in events:
             message = socket.recv_string()
             print(f"Received from Radar Station {i+1}: {message}")
-
-                # forward the messages to the command center
-            # Forward the messages to the command center
+            
+            # forward the messages to the command center
             if message not in processed_messages:
                 socket_fp_to_cc_pub.send_string(message)
                 processed_messages.add(message)
                 print(f"Forwarded to Command Center: {message}")
 
-    # process messages from the Command Center
+    # process messages from the command center
     for iata_code, sub_socket in socket_cc_to_fp_sub.items():
         if sub_socket in events:
             message = sub_socket.recv_string()
@@ -75,10 +74,10 @@ while True:
             #radar stations, it was being duplicated four times
             if message not in forwarded_messages:
                 try:
-                    parts = message.split(", ")
+                    parts = message.split(", ") #similar to what we have in cc.py
                     for part in parts:
                         if "IATA:" in part:
-                            source_iata = part.split(": ")[1]
+                            source_iata = part.split(": ")[1] #grab the iata code
                             break
                     print(f"Received from Command Center (Source IATA {source_iata}): {message}")
 
@@ -88,7 +87,7 @@ while True:
                             pub_socket.send_string(message)
                             print(f"Forwarded to Radar Station {target_code} (from {source_iata}): {message}")
 
-                    forwarded_messages.add(message)
+                    forwarded_messages.add(message) #log the forwarded message so it cant be sent duplicate times
 
                 except Exception as e:
                     print(f"Error processing message: {e}")
