@@ -1,0 +1,21 @@
+import zmq
+
+context = zmq.Context()
+
+#log listens to traffic from... traffic.py communicating to radar station 1
+socket_radar_1 = context.socket(zmq.SUB)
+socket_radar_1.connect("tcp://localhost:5567")
+socket_radar_1.setsockopt_string(zmq.SUBSCRIBE, "")
+
+socket_focal_point = context.socket(zmq.SUB)
+socket_focal_point.connect("tcp://localhpst:5562")
+socket_focal_point.setsockopt_string(zmq.SUBSCRIBE, "")
+
+print("Listening for messages on Radar Station 1...")
+
+while True:
+    message = socket_radar_1.recv_string()
+    print(f"Traffic message logged: {message}")
+
+    message = socket_focal_point.recv_string()
+    print(f"Focal Point data received: {message}")
